@@ -40,6 +40,7 @@ class Cell():
             print(f"Health - Cell {self.cell_id} - Unhealthy")
             self.health = "Unhealthy"
             return (
+                f"CELL FAILURE - "
                 f"Unhandled Request ID: {request['request_id']}, - "
                 f"Tenant: {request['tenant_id']}, - "
                 f"Cell: {self.cell_id} Data: {request['data']}"

@@ -2,34 +2,24 @@
 Virtual cell based architecture 
 '''
 
-from random import randrange, sample
-from uuid import uuid4
-
-from cell_management import Cell, cell_manager
-from tenant_management import Tenant, tenant_manager
+from cell_management import cell_manager
+from tenant_management import tenant_manager
+from cell_router import cell_router
+from request_generator import generate_request
 
 
 NUMBER_OF_TENANTS: int = 10
 NUMBER_OF_CELLS: int = 3
-NUMBER_OF_REQUESTS_TO_SIMULATE: int = 15
-
-
-
-
-def generate_request() -> dict:
-    '''
-    Generates a random request for a random tenant
-    '''
-
-    request = {
-        'tenant_id': tenant_manager.get_list_of_tenant_ids()[randrange(0, NUMBER_OF_TENANTS)],
-        'request_id': uuid4(),
-        'data': f'{randrange(1, 6)} bag(s) of chips'
-    }
-    return request
+NUMBER_OF_REQUESTS_TO_SIMULATE: int = 150
 
 
 def main():
+    '''
+    Here we create our virtual cell based architecture, then we create some tenants to
+    use it, and finally we simulate requests from those tenants, including some black
+    swan events which render cells they hit unhealthy
+    '''
+
     # Add cells
     for _ in range(NUMBER_OF_CELLS):
         cell_manager.add_cell()
@@ -47,7 +37,7 @@ def main():
             "Unhealthy Cell IDs:", cell_manager.get_list_of_unhealthy_cell_ids()
         )
 
-        cell_router(request=generate_request())
+        print(cell_router(request=generate_request()))
 
     # See how many unhealthy cells we have at the end
     print(f"Unhealthy Cells: {len(cell_manager.get_list_of_unhealthy_cell_ids())}\n")
