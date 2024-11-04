@@ -1,5 +1,35 @@
 # Virtual Cell Based Architecture
 
+After watching the AWS RE:Invent talks on cell based architectures, I needed to build something to help me understand it.
+
+Herein lies code that simulates parts of the cell based architecture.
+
+There is a class each that represent a cell, and a tenant. 
+
+There are also a couple of other classes that mimic parts of the control plane, such as tenant management, and cell management.
+
+## Program Flow
+
+In main.py, we start by creating a bunch of cells, then we create a bunch of tenants and assign them cells.
+
+Next we generate a bunch of requests from the tenants and send them into our cell router.
+
+The cell router looks at the cell affinity for the tenant making the request, and forwards the request to that cell for handling.
+
+If the cell router can not find a healthy cell to handle the request, it will return an error.
+
+## Simulated Errors And Health
+
+Tenant 2 is an unlucky tenant and every so often they will submit a bad request that kills the cell it is sent to.
+
+AWS Refers to these events as black swan events.
+
+Since each tenant has 2 cells assigned, even with 1 cell down, all requests will still be handled without issues.
+
+Once the tenant sends a second bad request and takes out a second cell, further requests from that tenant will not succeed, and similarly for any other tenant who's set of cells matched that of the tenant which poisoned all their cells.
+
+## Diagram
+
 ```mermaid
 graph LR;
     subgraph CellManager[Cell Manager]
@@ -47,7 +77,14 @@ graph LR;
     Request --> CellRouter
     TenantManager --> RouteRequestByTenant
     RouteRequestByTenant --> Cell0
-
-
-
 ```
+
+## Further Information
+
+[AWS re:Invent 2018: How AWS Minimizes the Blast Radius of Failures (ARC338)](https://youtu.be/swQbA4zub20?si%253DdObFeWYlBGGFm88q)
+
+## Problems With My Implimentation
+
+Firstly the cell affinity should be calculated to have as few tenants with a complete common set of cells as other tenants.
+
+The data plane should be separate to the control plane, in my case, the CellManager provides the handler to the cell router each time a request is made. The control plane should be able to go down while the data plane sustains operation, a redesign here would be wise.
