@@ -75,6 +75,7 @@ graph LR;
 
     subgraph CellRouter[Cell Router]
         TenantToCellMap[Tenant To Cell Map]
+        ListOFUnhealthyCells[List Of Unhealthy Cells]
         RouteRequestByTenant[Route The Request To A Cell Using The Tenant ID And Tenant Cell Map. If A Cell Is Unhealthy, Route To Another Cell Assigned To The Tenant Or Return Error If All The Tenants Cells Are Unhealthy]
     end
 
