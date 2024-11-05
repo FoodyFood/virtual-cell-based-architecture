@@ -6,16 +6,16 @@ would typically be part of the control plane.
 from random import sample
 from uuid import uuid4
 
-from cell_management import cell_manager
-
 class Tenant():
     '''
     A tenant and their information.
     '''
 
-    def __init__(self, tenant_id: str, cell_ids: list[int]):
+    def __init__(self, cell_router, tenant_id: str, cell_ids: list[int]):
         self.tenant_id: str = tenant_id
         self.cell_ids: list[int] = cell_ids
+
+        cell_router.register_tenant(tenant_id=tenant_id, cell_ids=cell_ids)
 
     def get_cell_ids(self):
         '''
@@ -37,7 +37,10 @@ class TenantManager():
     Manages tenants, part of the control place.
     '''
 
-    list_of_tenants: list = []
+    def __init__(self, cell_manager, cell_router):
+        self.list_of_tenants: list = []
+        self.cell_manager = cell_manager
+        self.cell_router = cell_router
 
     def add_tenant(self):
         '''
@@ -45,7 +48,7 @@ class TenantManager():
         '''
 
         # TODO: Currently 2 random cells are picked, ultimately CellManager should pick cells that are of low usage
-        tenant: Tenant = Tenant(tenant_id=str(uuid4()), cell_ids=sample(cell_manager.get_list_of_healthy_cell_ids(), 2))
+        tenant: Tenant = Tenant(cell_router=self.cell_router, tenant_id=str(uuid4()), cell_ids=sample(self.cell_manager.get_list_of_healthy_cell_ids(), 2))
         self.list_of_tenants.append(tenant)
 
     def get_list_of_tenants(self):
@@ -76,5 +79,3 @@ class TenantManager():
                 return tenant.get_cell_ids()
 
         return []
-
-tenant_manager: TenantManager = TenantManager()

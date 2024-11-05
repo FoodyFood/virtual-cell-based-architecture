@@ -7,9 +7,7 @@ these requests and will slowly poison their cells.
 from uuid import uuid4
 from random import sample, randrange
 
-from tenant_management import tenant_manager
-
-def generate_request() -> dict:
+def generate_request(tenant_manager) -> dict:
     '''
     Generates a random request for a random tenant
     '''
