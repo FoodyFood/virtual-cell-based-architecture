@@ -8,6 +8,20 @@ There is a class each that represent a cell, and a tenant.
 
 There are also a couple of other classes that mimic parts of the control plane, such as tenant management, and cell management.
 
+## Why Cell Based Architecture?
+
+Cell based architecture is a means of reducing blast radius. Each cell is a completely self sustaining deployment with everything it needs to function. If a cell is lost, the other cells are unaffected and operations continue as normal. 
+
+If we employ some wise routing, we can route tenants around an unhealthy cell to other healthy cells, and their requests will still be handled.
+
+## Where Do I Start?
+
+Start with the video below, or if you want to look at code first, start with main.py, run it and see what happens, then tweak the constants at the top to experiment with the number of tenants, the number of cells, and the number of requests. 
+
+Some requests are bad and will poison a cell, rendering it unhealthy, the cell router will attempt to route around this, but eventually the tenant submitting the bad requests will poison all their cells and the router will no longer be able to route their requests. 
+
+Other tenants though are not affected and their requests are handled fine. This means we have reduced the blast radius to a single tenant if using the default settings.
+
 ## Program Flow
 
 In main.py, we start by creating a bunch of cells, then we create a bunch of tenants and assign them cells.
