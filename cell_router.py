@@ -37,14 +37,13 @@ class CellRouter():
         '''
 
         # Get the list of all current healthy cells
+        print("unhealthy", self.list_of_unhealthy_cells)
         list_of_healthy_cells: list = []
         for cell in self.list_of_cells:
-            print(cell)
-            for unhealthy_cell in self.list_of_unhealthy_cells:
-                print(cell[0], unhealthy_cell[0])
-                if cell[0] != unhealthy_cell[0]:
-                    list_of_healthy_cells.append(cell)
-                    print(cell, list_of_healthy_cells)
+            cell_id, _ = cell
+            # Only add the cell if it is not in the list of unhealthy cells
+            if cell_id not in self.list_of_unhealthy_cells:
+                list_of_healthy_cells.append(cell)
 
         # Get the list of cells the tenant is assigned
         tenants_cell_ids: list[int] = []
@@ -59,7 +58,7 @@ class CellRouter():
                 if cell_id == healthy_cell[0]:
                     response = healthy_cell[1](request=request)
                     # If the response is bad, we add the cel to the unhealthy cells list
-                    if response.startswith("CELL FAULIRE"):
+                    if response.startswith("CELL FAILURE"):
                         self.list_of_unhealthy_cells.append(healthy_cell[0])
                     return response
 
