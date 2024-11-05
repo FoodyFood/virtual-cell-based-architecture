@@ -20,6 +20,10 @@ If the cell router can not find a healthy cell to handle the request, it will re
 
 Each tenant gets 2 cells assigned to them to increase availability and fault tolerance, this could be any number but there should be vastly more cells than there are cells per tenant.
 
+## Control Plane And Data Plane
+
+There has been some effort to isolate the control place (Cell and Tenant Management) from the data plane (Routing and Request Handling). It is important that the data place can continue operation in absence of the control plane. This decoupling will improve availability by reducing dependence.
+
 ## Simulated Errors And Health
 
 Tenant 2 is an unlucky tenant and every so often they will submit a bad request that kills the cell it is sent to.
@@ -88,10 +92,8 @@ graph LR;
 
 [AWS re:Invent 2018: How AWS Minimizes the Blast Radius of Failures (ARC338)](https://youtu.be/swQbA4zub20?si%253DdObFeWYlBGGFm88q)
 
-## Problems With My Implimentation
+## Problems With My Implementation
 
-Firstly the cell affinity should be calculated to have as few tenants with a complete common set of cells as other tenants.
-
-The data plane should be separate to the control plane, in my case, the CellManager provides the handler to the cell router each time a request is made. The control plane should be able to go down while the data plane sustains operation, a redesign here would be wise.
+Cell affinity should be calculated to have as few tenants with a complete common set of cells as other tenants.
 
 There is no balancing when new cells or tenants are added.
