@@ -18,6 +18,8 @@ The cell router looks at the cell affinity for the tenant making the request, an
 
 If the cell router can not find a healthy cell to handle the request, it will return an error.
 
+Each tenant gets 2 cells assigned to them to increase availability and fault tolerance, this could be any number but there should be vastly more cells than there are cells per tenant.
+
 ## Simulated Errors And Health
 
 Tenant 2 is an unlucky tenant and every so often they will submit a bad request that kills the cell it is sent to.
@@ -32,19 +34,20 @@ Once the tenant sends a second bad request and takes out a second cell, further 
 
 ```mermaid
 graph LR;
+    subgraph Cells;
+        Cell0[Cell 0]
+        Cell1[Cell 1]
+        Cell2[Cell 2]
+    end
     subgraph CellManager[Cell Manager]
-        subgraph Cells;
-            Cell0[Cell 0]
-            Cell1[Cell 1]
-            Cell2[Cell 2]
-        end
-
+        CellHealth[Cell Health]
 
         Cell0 --> CellHealth
         Cell1 --> CellHealth
         Cell2 --> CellHealth
         
-        CellHealth[Cell Health]
+        AddCell[Add Cell]
+        RemoveCell[Remove Cell]
     end
 
 
@@ -71,7 +74,8 @@ graph LR;
     end
 
     subgraph CellRouter[Cell Router]
-        RouteRequestByTenant[Route Request To Cell Using Tenant ID And Tenant Cell Affinity. If A Cell Is Unhealthy, Route To Another Tenant Cell Or Return Error If All Tenant Cells Are Unhealthy]
+        TenantToCellMap[Tenant To Cell Map]
+        RouteRequestByTenant[Route The Request To A Cell Using The Tenant ID And Tenant Cell Map. If A Cell Is Unhealthy, Route To Another Cell Assigned To The Tenant Or Return Error If All The Tenants Cells Are Unhealthy]
     end
 
     Request --> CellRouter
@@ -88,3 +92,5 @@ graph LR;
 Firstly the cell affinity should be calculated to have as few tenants with a complete common set of cells as other tenants.
 
 The data plane should be separate to the control plane, in my case, the CellManager provides the handler to the cell router each time a request is made. The control plane should be able to go down while the data plane sustains operation, a redesign here would be wise.
+
+There is no balancing when new cells or tenants are added.
