@@ -22,7 +22,7 @@ Each tenant gets 2 cells assigned to them to increase availability and fault tol
 
 ## Control Plane And Data Plane
 
-There has been some effort to isolate the control place (Cell and Tenant Management) from the data plane (Routing and Request Handling). It is important that the data place can continue operation in absence of the control plane. This decoupling will improve availability by reducing dependence.
+There has been some effort to isolate the control place (Cell and Tenant Management) from the data plane (Cell Routing and Request Handling). It is important that the data place can continue operation in absence of the control plane. This decoupling will improve availability by removing dependence.
 
 ## Simulated Errors And Health
 
