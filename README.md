@@ -22,6 +22,16 @@ Some requests are bad and will poison a cell, rendering it unhealthy, the cell r
 
 Other tenants though are not affected and their requests are handled fine. This means we have reduced the blast radius to a single tenant if using the default settings.
 
+## What Is The Cell Router?
+
+The cell router keeps a list of tenants, and healthy cells, each tenant might be assigned a single cell or multiple cells, but not all cells.
+
+The cell router will route a requst from a tenant to a cell that the tenant is assigned, where it will be handled.
+
+If a cell fails to respond, or returns an error, it can be marked unhealthy and the router will attemop to route to other healthy cells the tenant is assigned to.
+
+AWS calls this "the thinnest possible layer". It shoud be as bullet proof and as thin as possible, if it goes down, the whole system goes down, it has a blast radius of 100%, it should do only what it needs to do to route requests and no more.
+
 ## Program Flow
 
 In main.py, we start by creating a bunch of cells, then we create a bunch of tenants and assign them cells.
