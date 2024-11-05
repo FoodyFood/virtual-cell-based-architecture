@@ -3,7 +3,6 @@ Contains a class that represents a tenant, as well as a tenant manager, this
 would typically be part of the control plane.
 '''
 
-from random import sample
 from uuid import uuid4
 
 class Tenant():
@@ -48,7 +47,7 @@ class TenantManager():
         '''
 
         # TODO: Currently 2 random cells are picked, ultimately CellManager should pick cells that are of low usage
-        tenant: Tenant = Tenant(cell_router=self.cell_router, tenant_id=str(uuid4()), cell_ids=sample(self.cell_manager.get_list_of_healthy_cell_ids(), 2))
+        tenant: Tenant = Tenant(cell_router=self.cell_router, tenant_id=str(uuid4()), cell_ids=self.cell_manager.assign_cells_to_new_tenant())
         self.list_of_tenants.append(tenant)
 
     def get_list_of_tenants(self):

@@ -3,6 +3,8 @@ Contains a class that represents a cell as well as a manager that would otherwis
 be part of the control plane, it manages adding cells and determining cell health.
 '''
 
+from random import sample
+
 from cell import Cell
 
 class CellManager():
@@ -61,3 +63,10 @@ class CellManager():
                 return cell.request_handler
 
         return None
+
+    def assign_cells_to_new_tenant(self):
+        '''
+        This will assign some cells from the pool to new a new tenant
+        '''
+
+        return sample(self.get_list_of_healthy_cell_ids(), 2)
