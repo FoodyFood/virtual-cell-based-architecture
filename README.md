@@ -115,6 +115,7 @@ graph LR;
 ## Further Information
 
 [AWS re:Invent 2018: How AWS Minimizes the Blast Radius of Failures (ARC338)](https://youtu.be/swQbA4zub20?si%253DdObFeWYlBGGFm88q)
+[AWS re:Invent 2022 - Journey to cell-based microservices architecture on AWS for hyperscale (ARC312)](https://youtu.be/ReRrhU-yRjg?si=eJXnDzuAmbyznnxo)
 
 ## Problems With My Implementation
 
